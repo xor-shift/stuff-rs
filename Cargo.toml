@@ -1,5 +1,5 @@
 [workspace]
-members = ["examples/bigpt_rs", "examples/smallpt_rs", "examples/rng_visualiser"]
+members = ["examples/smallpt_rs", "examples/rng_visualiser"]
 
 [package]
 name = "stuff"
