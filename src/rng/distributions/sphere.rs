@@ -1,6 +1,5 @@
 use std::marker::PhantomData;
 
-use crate::integral::convert::FromScalar;
 use crate::{FloatConstants, FloatingPoint, ZeroAndOne};
 
 use super::*;

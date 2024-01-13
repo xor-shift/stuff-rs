@@ -5,13 +5,10 @@
 #![feature(const_mut_refs)]
 #![feature(const_trait_impl)]
 #![feature(generic_const_exprs)]
+#![allow(incomplete_features)]
 
 mod colormap;
 
-use std::io::Read;
-
-use stuff::qoi::*;
-use stuff::rng::distributions::sphere::NDSampler;
 use stuff::rng::*;
 
 #[derive(Clone, Copy)]
@@ -21,7 +18,7 @@ struct VisualisationConfiguration {
     pub vis_y_range: (f64, f64),
 }
 
-pub fn visualise<Fun: FnMut() -> (f64, f64)>(mut fun: Fun, config: &VisualisationConfiguration, samples: usize) -> stuff::qoi::Image {
+fn visualise<Fun: FnMut() -> (f64, f64)>(mut fun: Fun, config: &VisualisationConfiguration, samples: usize) -> stuff::qoi::Image {
     let bin_it = |val: f64, bin_count: u32, range: (f64, f64)| -> u32 {
         let t = (val - range.0) / (range.1 - range.0);
 

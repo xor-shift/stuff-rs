@@ -1,5 +1,3 @@
-use std::io::Write;
-
 use super::*;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]

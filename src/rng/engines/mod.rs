@@ -5,6 +5,8 @@ pub mod random_device;
 pub mod splitmix;
 pub mod xoroshiro;
 pub mod xoshiro;
+
+#[cfg(test)]
 mod test_tables;
 
 pub use random_device::*;
@@ -67,7 +69,7 @@ impl<T: Integral, const N: usize, P: PolyDiscarder<T, N> + Permuter<T, N>> Disca
         // this is terrible
 
         for (jump_length, poly) in Self::polynomials() {
-            let jump_count = z/jump_length;
+            let jump_count = z / jump_length;
             z -= jump_count * jump_length;
 
             for _ in 0..jump_count {
@@ -84,18 +86,21 @@ impl<T: Integral, const N: usize, P: PolyDiscarder<T, N> + Permuter<T, N>> Disca
 }
 
 mod util {
-    use crate::integral::*;
+    #[cfg(test)]
     use super::super::RandomNumberEngine;
+    use crate::integral::*;
 
     // see stuff/libs/random/test/consistency.cpp
+    #[cfg(test)]
     pub struct ConsistencyTestTable<T: Integral, const N: usize> {
         pub date: &'static str,
         pub seed: T,
         pub table: [T; N],
     }
 
+    #[cfg(test)]
     impl<T: Integral, const N: usize> ConsistencyTestTable<T, N> {
-        pub fn test<E: RandomNumberEngine<ResultType=T>>(&'static self, engine: &mut E) {
+        pub fn test<E: RandomNumberEngine<ResultType = T>>(&'static self, engine: &mut E) {
             engine.seed_from_result(self.seed);
 
             let generated = std::iter::repeat(()).map(move |_| engine.generate());
@@ -105,15 +110,19 @@ mod util {
         }
     }
 
+    #[cfg(test)]
     pub struct JumpConsistencyTestTable<T: Integral, const N: usize> {
         pub date: &'static str,
         pub table: [(T, T); N],
     }
 
+    #[cfg(test)]
     impl<T: Integral, const N: usize> JumpConsistencyTestTable<T, N> {
         pub fn test<E, F>(&'static self, engine: &mut E, jumper: F)
-            where E: RandomNumberEngine<ResultType=T>,
-                  F: Fn(&mut E) {
+        where
+            E: RandomNumberEngine<ResultType = T>,
+            F: Fn(&mut E),
+        {
             for (seed, expected_after_jump) in self.table {
                 engine.seed_from_result(seed);
                 jumper(engine);
@@ -123,6 +132,8 @@ mod util {
         }
     }
 
+    #[deprecated]
+    #[allow(dead_code)]
     pub fn jump_f2_with_polynomial<T: Integral, const N: usize, F: Fn(&mut [T; N]) -> ()>(state: &mut [T; N], poly: [T; N], permuter: &F) {
         let mut res = [T::zero(); N];
 

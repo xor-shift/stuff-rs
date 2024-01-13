@@ -1,4 +1,3 @@
-#![allow(incomplete_features)]
 #![feature(adt_const_params)]
 #![feature(float_next_up_down)]
 #![feature(generic_const_exprs)]
@@ -7,6 +6,9 @@
 #![feature(let_chains)]
 #![feature(more_float_constants)]
 #![feature(structural_match)]
+//
+#![allow(incomplete_features)]
+#![allow(mixed_script_confusables)]
 
 pub mod integral;
 pub mod numeric_limits;

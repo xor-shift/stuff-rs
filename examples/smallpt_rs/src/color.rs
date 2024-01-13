@@ -12,7 +12,7 @@ fn srgb_oetf<T: FloatingPoint>(x: T) -> T {
 }
 
 impl<T: FloatingPoint> Color<T> {
-    pub const fn new(r: T, g: T, b: T) -> Self { Self(Vector::new_arr([r, g, b])) }
+    pub const fn new(r: T, g: T, b: T) -> Self { Self(Vector([r, g, b])) }
 
     pub fn to_qoi_color(self) -> stuff::qoi::Color {
         stuff::qoi::Color::from_rgba_bytes([

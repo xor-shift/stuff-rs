@@ -90,24 +90,42 @@ mod tests {
     fn test_xoroshiro128p_consistency() {
         let mut generator = Xoroshiro128P::new();
         test_tables::TABLE_XOROSHIRO128P_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128P_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128P_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128P_SEED_2.test(&mut generator);
     }
 
     #[test]
     fn test_xoroshiro128pp_consistency() {
         let mut generator = Xoroshiro128PP::new();
         test_tables::TABLE_XOROSHIRO128PP_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128PP_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128PP_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128PP_SEED_2.test(&mut generator);
     }
 
     #[test]
     fn test_xoroshiro128ss_consistency() {
         let mut generator = Xoroshiro128SS::new();
         test_tables::TABLE_XOROSHIRO128SS_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128SS_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_2.test(&mut generator);
         test_tables::TABLE_XOROSHIRO128SS_SEED_0.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_1.test(&mut generator);
+        test_tables::TABLE_XOROSHIRO128SS_SEED_2.test(&mut generator);
     }
 
     #[test]

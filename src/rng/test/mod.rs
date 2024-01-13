@@ -1,11 +1,11 @@
-use std::{num::NonZeroUsize, ops::AddAssign};
+use std::num::NonZeroUsize;
 
-use super::{distributions::{GenerateCanonical, NormalDistribution}, RandomNumberEngine};
+use super::{distributions::NormalDistribution, RandomNumberEngine};
 
 struct BinBuilder {
     start: f64,
     end: f64,
-    bin_size: f64,
+    // bin_size: f64,
 
     bins: Vec<usize>,
     underflows: usize,
@@ -21,12 +21,12 @@ pub enum Bin {
 
 impl BinBuilder {
     pub fn new_range(start: f64, end: f64, bin_count: NonZeroUsize) -> Self {
-        let value_range = end - start;
+        // let value_range = end - start;
 
         Self {
             start,
             end,
-            bin_size: value_range / (bin_count.get() as f64),
+            // bin_size: value_range / (bin_count.get() as f64),
             bins: vec![0usize; bin_count.get()],
             underflows: 0,
             overflows: 0,
@@ -69,10 +69,12 @@ impl BinBuilder {
         }
     }
 
+    #[allow(dead_code)]
     pub fn get_for(&self, val: f64) -> usize { self.get(self.decide_bin(val)) }
 
+    #[allow(dead_code)]
     pub fn print(&self, height: usize) {
-        let max_digits = self.bins.len().ilog10() + 1;
+        // let max_digits = self.bins.len().ilog10() + 1;
 
         let max_bin_height = *self.bins.iter().max().unwrap();
 
@@ -171,7 +173,7 @@ fn test_normal_bins() {
 
     let mut generator = crate::rng::engines::Xoroshiro128P::new();
     generator.seed_from_result(0xDEADBEEF_CAFEBABE_u64);
-    
+
     let mut distribution = NormalDistribution::<f64>::new();
 
     let mut generate_fn = move || -> f64 { distribution.generate(&mut generator) };

@@ -35,14 +35,6 @@ fn decide_idx_diff_luma_rgb_rgba(hash_table: &ColorHashTable, previous: Color, c
         return RawCommand::ColorRGBA([color.r, color.g, color.b, color.a]);
     }
 
-    macro_rules! bail {
-        () => {
-            return RawCommand::ColorRGBA([color.r, color.g, color.b, color.a])
-        };
-    }
-
-    // bail!();
-
     let dr = best_modular_diff(color.r as u32, previous.r as u32, 256);
     let dg = best_modular_diff(color.g as u32, previous.g as u32, 256);
     let db = best_modular_diff(color.b as u32, previous.b as u32, 256);
@@ -131,8 +123,6 @@ impl<Callback: FnMut(&[u8]) -> std::io::Result<()>> Encoder<Callback> {
                 (false, true) => EncoderOutput::Double(RawCommand::Run(61), decide_idx_diff_luma_rgb_rgba(&self.hash_table, self.previous_color, color)),
                 (false, false) => EncoderOutput::Double(RawCommand::Run(run_length - 1), decide_idx_diff_luma_rgb_rgba(&self.hash_table, self.previous_color, color)),
             },
-
-            _ => todo!(),
         };
 
         let next_state = match (self.state, color == self.previous_color) {

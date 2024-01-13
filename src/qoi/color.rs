@@ -11,7 +11,7 @@ pub struct Color {
 }
 
 impl Display for Color {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { todo!() }
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::fmt::Result { todo!() }
 }
 
 impl Default for Color {

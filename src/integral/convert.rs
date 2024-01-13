@@ -98,6 +98,14 @@ impl_from!(i64);
 impl_from!(i128);
 impl_from!(isize);
 
+impl ZeroAndOne for bool {
+    #[inline]
+    fn zero() -> bool { false }
+
+    #[inline]
+    fn one() -> bool { true }
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

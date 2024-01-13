@@ -6,25 +6,22 @@ mod ray;
 
 mod sphere;
 
-use std::{
-    cell::{SyncUnsafeCell, UnsafeCell},
-    sync::{Arc, Mutex},
-};
+use std::sync::{Arc, Mutex};
 
 use camera::*;
 use color::*;
 use ray::*;
 
-use stuff::rng::distributions::sphere::NDSampler;
-use stuff::rng::distributions::GenerateCanonical;
-use stuff::rng::*;
-use stuff::smallvec::*;
+use rng::distributions::sphere::NDSampler;
+use rng::distributions::GenerateCanonical;
+use rng::*;
+use smallvec::*;
 use stuff::*;
 
 const SPHERES: [sphere::Sphere<f64>; 8] = [
     // light
     sphere::Sphere {
-        center: Vector::new_arr([0., 42.499, 15.]),
+        center: Vector([0., 42.499, 15.]),
         radius: 40.,
         albedo: Color::new(0., 0., 0.),
         emittance: Color(Vector::new_explode(12.)),
@@ -33,7 +30,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // mirror
     sphere::Sphere {
-        center: Vector::new_arr([-1.75, -2.5 + 0.9, 17.5]),
+        center: Vector([-1.75, -2.5 + 0.9, 17.5]),
         radius: 0.9,
         albedo: Color(Vector::new_explode(0.99)),
         emittance: Color(Vector::new_explode(0.)),
@@ -42,7 +39,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // glass
     sphere::Sphere {
-        center: Vector::new_arr([1.75, -2.5 + 0.9 + 0.2, 16.5]),
+        center: Vector([1.75, -2.5 + 0.9 + 0.2, 16.5]),
         radius: 0.9,
         albedo: Color(Vector::new_explode(0.99)),
         emittance: Color(Vector::new_explode(0.)),
@@ -51,7 +48,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // ceiling
     sphere::Sphere {
-        center: Vector::new_arr([0., 5000., 5.]),
+        center: Vector([0., 5000., 5.]),
         radius: 4997.5,
         albedo: Color::new(0.75, 0.75, 0.75),
         emittance: Color::new(0., 0., 0.),
@@ -60,7 +57,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // floor
     sphere::Sphere {
-        center: Vector::new_arr([0., -5000., 5.]),
+        center: Vector([0., -5000., 5.]),
         radius: 4997.5,
         albedo: Color::new(0.75, 0.75, 0.75),
         emittance: Color::new(0., 0., 0.),
@@ -69,7 +66,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // backwall
     sphere::Sphere {
-        center: Vector::new_arr([0., 0., 5000.]),
+        center: Vector([0., 0., 5000.]),
         radius: 4980.,
         albedo: Color::new(0.75, 0.75, 0.75),
         emittance: Color::new(0., 0., 0.),
@@ -78,7 +75,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // right wall
     sphere::Sphere {
-        center: Vector::new_arr([5000., 0., 0.]),
+        center: Vector([5000., 0., 0.]),
         radius: 4996.5,
         albedo: Color::new(0.25, 0.25, 0.75),
         emittance: Color::new(0., 0., 0.),
@@ -87,7 +84,7 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
     // left wall
     sphere::Sphere {
-        center: Vector::new_arr([-5000., 0., 0.]),
+        center: Vector([-5000., 0., 0.]),
         radius: 4996.5,
         albedo: Color::new(0.75, 0.25, 0.25),
         emittance: Color::new(0., 0., 0.),
@@ -96,18 +93,11 @@ const SPHERES: [sphere::Sphere<f64>; 8] = [
     },
 ];
 
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Renderer {
-    UniPT,
-    Preview,
-}
-
 #[derive(Clone)]
 struct RenderConfiguration {
     camera: PinholeCamera<f64>,
     dimensions: (usize, usize),
     samples: usize,
-    renderer: Renderer,
 }
 
 fn trace_iterative<T: Intersectable<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(mut ray: Ray<f64>, scene: &T, gen: &mut Gen) -> Color<f64> {
@@ -128,7 +118,7 @@ fn trace_iterative<T: Intersectable<f64>, Gen: stuff::rng::UniformRandomBitGener
         let (wi, cos_brdf_over_wi_pdf) = match intersection.material {
             ReflectanceType::Diffuse => {
                 let (wi, wi_pdf) = stuff::rng::distributions::sphere::UniformSphereSampler::new().sample(gen);
-                let wi = Vector::new_arr(wi);
+                let wi = Vector(wi);
                 let wi = if wi.dot(intersection.normal) >= 0. { wi } else { -wi };
                 let wi_pdf = wi_pdf * 2.;
                 let brdf = 0.5 / std::f64::consts::PI;
@@ -183,10 +173,11 @@ fn trace_iterative<T: Intersectable<f64>, Gen: stuff::rng::UniformRandomBitGener
     Color(light)
 }
 
-fn kernel_preview<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(pixel_cooridnates: (usize, usize), gen: &mut Gen, camera: &CameraType, dims: (usize, usize), samples: usize) -> Color<f64> {
+#[allow(dead_code)]
+fn kernel_preview<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(pixel_cooridnates: (usize, usize), gen: &mut Gen, camera: &CameraType, samples: usize) -> Color<f64> {
     let res = (0..samples)
         .map(|_| {
-            let (ray, ray_pdf) = camera.generate_ray(pixel_cooridnates, gen);
+            let (ray, _ray_pdf) = camera.generate_ray(pixel_cooridnates, gen);
             if let Some(intersection) = SPHERES.intersect(&ray) {
                 intersection.albedo.0 * intersection.normal.dot(ray.direction).abs()
             } else {
@@ -199,7 +190,8 @@ fn kernel_preview<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGene
     color::Color(res)
 }
 
-fn kernel<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(pixel_cooridnates: (usize, usize), gen: &mut Gen, camera: &CameraType, dims: (usize, usize), samples: usize) -> Color<f64> {
+#[allow(dead_code)]
+fn kernel<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(pixel_cooridnates: (usize, usize), gen: &mut Gen, camera: &CameraType, samples: usize) -> Color<f64> {
     let res = (0..samples)
         .map(|_| {
             let (ray, ray_pdf) = camera.generate_ray(pixel_cooridnates, gen);
@@ -211,6 +203,7 @@ fn kernel<CameraType: Camera<f64>, Gen: stuff::rng::UniformRandomBitGenerator>(p
     color::Color(res)
 }
 
+#[allow(dead_code)]
 fn single_threaded(config: &RenderConfiguration) {
     let mut rd = stuff::rng::engines::RandomDevice::new();
     let mut generator = stuff::rng::engines::Xoshiro256PP::new();
@@ -219,13 +212,14 @@ fn single_threaded(config: &RenderConfiguration) {
     let pixels = (0..config.dimensions.1) //
         .map(|y| (0..config.dimensions.0).map(move |x| (x, y)))
         .flatten()
-        .map(|pixel_coords| kernel(pixel_coords, &mut generator, &config.camera, config.dimensions, config.samples));
+        .map(|pixel_coords| kernel(pixel_coords, &mut generator, &config.camera, config.samples));
 
     let image = stuff::qoi::Image::from_pixels_it(config.dimensions.0 as u32, config.dimensions.1 as u32, pixels.map(|v| v.to_qoi_color()));
     let mut file = std::fs::File::create("./out.qoi").expect("failed to open out.qoi");
     image.encode_to_writer(&mut file).expect("failed to write to out.qoi");
 }
 
+#[allow(dead_code)]
 fn multi_threaded(config: RenderConfiguration) {
     struct Product {
         for_row: usize,
@@ -262,7 +256,7 @@ fn multi_threaded(config: RenderConfiguration) {
                 break;
             }
 
-            let pixels = (0..config.dimensions.0).map(|x| kernel((x, row), &mut generator, &config.camera, config.dimensions, config.samples)).collect();
+            let pixels = (0..config.dimensions.0).map(|x| kernel((x, row), &mut generator, &config.camera, config.samples)).collect();
 
             sender.send(Product { for_row: row, pixels }).unwrap();
         }));
@@ -286,13 +280,12 @@ fn multi_threaded(config: RenderConfiguration) {
 }
 
 pub fn main() {
-    let dimensions = (64 * 8, 36 * 8);
+    let dimensions = (64 * 4, 36 * 4);
 
     let config = RenderConfiguration {
-        camera: PinholeCamera::new(Vector::new_arr([0., 0.5, -1.]), dimensions, 45. * std::f64::consts::PI / 180.),
+        camera: PinholeCamera::new(Vector([0., 0.5, -1.]), dimensions, 45. * std::f64::consts::PI / 180.),
         dimensions: dimensions,
-        samples: 64,
-        renderer: Renderer::UniPT,
+        samples: 128,
     };
 
     multi_threaded(config);

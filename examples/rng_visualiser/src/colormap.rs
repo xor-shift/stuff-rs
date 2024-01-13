@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 const fn convert_to_bytes<const N: usize>(values: &[(f64, f64, f64); N]) -> [u8; N * 8 * 3] {
     let mut ret = std::mem::MaybeUninit::uninit();
 
@@ -29,7 +30,9 @@ const fn convert_to_bytes<const N: usize>(values: &[(f64, f64, f64); N]) -> [u8;
     unsafe { ret.assume_init() }
 }
 
+#[allow(dead_code)]
 const fn convert_from_bytes<const N: usize>(values: &[u8; N * 8 * 3]) -> [(f64, f64, f64); N] {
+    #[allow(unused_mut)]
     let mut ret = std::mem::MaybeUninit::uninit();
 
     let mut i = 0;
@@ -57,13 +60,21 @@ const fn convert_from_bytes<const N: usize>(values: &[u8; N * 8 * 3]) -> [(f64, 
     unsafe { ret.assume_init() }
 }
 
+#[allow(dead_code)]
 pub const COLORMAP_GRAYSCALE: [(f64, f64, f64); 2] = convert_from_bytes(include_bytes!("colormaps/grayscale.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_MAGMA: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/magma.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_INFERNO: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/inferno.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_PLASMA: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/plasma.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_VIRIDIS: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/viridis.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_CIVIDIS: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/cividis.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_TWILIGHT: [(f64, f64, f64); 510] = convert_from_bytes(include_bytes!("colormaps/twilight.bin"));
+#[allow(dead_code)]
 pub const COLORMAP_TURBO: [(f64, f64, f64); 256] = convert_from_bytes(include_bytes!("colormaps/turbo.bin"));
 
 pub fn map_to_color(v: f64, colormap: &[(f64, f64, f64)]) -> (f64, f64, f64) {

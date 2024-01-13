@@ -1,6 +1,5 @@
 use std::fmt::Display;
 use std::fmt::Formatter;
-use std::str::FromStr;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum ErrorType {
@@ -9,12 +8,12 @@ pub enum ErrorType {
     BadMetadata,
     TooMuchData,
     BadEndMark,
-    
+
     IOError,
 }
 
 impl Display for ErrorType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -25,7 +24,7 @@ pub struct QoIError {
 }
 
 impl Display for QoIError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
+    fn fmt(&self, _f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
 }
 
 impl QoIError {
@@ -35,7 +34,7 @@ impl QoIError {
 }
 
 impl From<std::io::Error> for QoIError {
-    fn from(value: std::io::Error) -> Self { Self::new(ErrorType::IOError) }
+    fn from(_value: std::io::Error) -> Self { Self::new(ErrorType::IOError) }
 }
 
 impl std::error::Error for QoIError {

@@ -1,6 +1,4 @@
 use crate::*;
-use crate::rng::*;
-use crate::rng::distributions::GenerateCanonical;
 
 /*
 pub trait CanonicalFloat
@@ -158,6 +156,7 @@ macro_rules! impl_canonical_oper {
     };
 }
 
+#[allow(dead_code)]
 impl<T: FloatingPoint> Canonical<T> {
     type UnderlyingType = T;
 

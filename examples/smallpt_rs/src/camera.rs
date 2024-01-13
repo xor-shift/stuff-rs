@@ -1,6 +1,6 @@
 use crate::*;
+use ray::*;
 
-use ray::Ray;
 use stuff::{FloatingPoint, ZeroAndOne};
 
 pub trait Camera<T: FloatingPoint> {
@@ -27,7 +27,7 @@ impl<T: FloatingPoint + GenerateCanonical<T>> Camera<T> for PinholeCamera<T> {
         //let d = screen_coords.0 as f64 * (half_θ.atan()) / 2f64 ;
         let d = (one / (two * half_θ.sin())) * ((T::as_from(self.screen_dims.0) * (two - T::as_from(self.screen_dims.0))).abs()).sqrt();
         let offset = (T::generate_canonical(gen) * two - one, T::generate_canonical(gen) * two - one);
-        let direction = Vector::new_arr([
+        let direction = Vector([
             T::as_from(screen_coords.0) - (T::as_from(self.screen_dims.0) / two) + offset.0, //
             T::as_from(self.screen_dims.1 - screen_coords.1 - 1) - (T::as_from(self.screen_dims.1) / two) + offset.1,
             d,

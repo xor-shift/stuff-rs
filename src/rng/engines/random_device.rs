@@ -7,6 +7,7 @@ use crate::rng::UniformRandomBitGenerator;
 
 pub struct RandomDevice {
     rand_file: Option<std::fs::File>,
+    #[allow(dead_code)]
     last_entropy: u64,
 }
 
@@ -77,7 +78,7 @@ impl RandomDevice {
         )
     }
 
-    fn strat_fallback(&mut self) -> Option<u64> { None }
+    fn strat_fallback(&mut self) -> Option<u64> { todo!() }
 }
 
 impl UniformRandomBitGenerator for RandomDevice {

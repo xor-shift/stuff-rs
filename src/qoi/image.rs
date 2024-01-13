@@ -27,6 +27,10 @@ impl Image {
         let mut data_bytes = &bytes[14..bytes.len() - 8];
         let end_mark_bytes = &bytes[bytes.len() - 8..];
 
+        if end_mark_bytes != [0, 0, 0, 0, 0, 0, 0, 1] {
+            return Err(QoIError::new(ErrorType::BadEndMark))
+        }
+
         let header = Header::from_bytes(header_bytes)?;
 
         let mut colors = vec![Color::default(); header.height as usize * header.width as usize].into_boxed_slice();

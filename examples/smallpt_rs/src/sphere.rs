@@ -1,6 +1,6 @@
-use crate::color::*;
-use crate::ray::*;
 use crate::*;
+use color::*;
+use ray::*;
 use stuff::smallvec::Vector;
 use stuff::FloatingPoint;
 use stuff::ZeroAndOne;
@@ -87,7 +87,7 @@ mod test {
     #[test]
     fn test_sphere_intersection() {
         let sphere = Sphere {
-            center: Vector::new_arr([1., 1., 5.]),
+            center: Vector([1., 1., 5.]),
             radius: 1.5,
             albedo: Color::new(0., 0., 0.),
             emittance: Color::new(0., 0., 0.),
@@ -97,22 +97,22 @@ mod test {
 
         assert!(sphere
             .intersect(&Ray {
-                origin: Vector::new_arr([-1., -1., 0.]),
-                direction: Vector::new_arr([0., 0., 1.]).normalized(),
+                origin: Vector([-1., -1., 0.]),
+                direction: Vector([0., 0., 1.]).normalized(),
             })
             .is_none());
 
         assert!(sphere
             .intersect(&Ray {
-                origin: Vector::new_arr([1., 1., 0.]),
-                direction: Vector::new_arr([0., 0., 1.]).normalized(),
+                origin: Vector([1., 1., 0.]),
+                direction: Vector([0., 0., 1.]).normalized(),
             })
             .is_some());
 
         assert!(sphere
             .intersect(&Ray {
-                origin: Vector::new_arr([3., 3., 0.]),
-                direction: Vector::new_arr([0., 0., 1.]).normalized(),
+                origin: Vector([3., 3., 0.]),
+                direction: Vector([0., 0., 1.]).normalized(),
             })
             .is_none());
     }
