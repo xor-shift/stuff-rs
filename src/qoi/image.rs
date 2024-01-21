@@ -28,7 +28,7 @@ impl Image {
         let end_mark_bytes = &bytes[bytes.len() - 8..];
 
         if end_mark_bytes != [0, 0, 0, 0, 0, 0, 0, 1] {
-            return Err(QoIError::new(ErrorType::BadEndMark))
+            return Err(QoIError::new(ErrorType::BadEndMark));
         }
 
         let header = Header::from_bytes(header_bytes)?;
@@ -78,6 +78,26 @@ impl Image {
     }
 
     pub fn encode_to_vec(&self, vec: &mut Vec<u8>) { self.encode_to_writer(vec).unwrap() }
+
+    pub fn rgba_bytes<'a>(&'a self) -> &'a [u8] {
+        let orig_ptr = self.data.as_ptr();
+
+        unsafe {
+            let cast_ptr = std::mem::transmute(orig_ptr);
+            std::slice::from_raw_parts(cast_ptr, self.data.len() * 4)
+        }
+    }
+
+    pub fn to_rgba_bytes(self) -> Vec<u8> {
+        let len = self.data.len() * 4;
+        let moved = Box::into_raw(self.data);
+        let ptr = moved as *mut Color;
+
+        unsafe {
+            let cast_ptr = std::mem::transmute(ptr);
+            std::vec::Vec::from_raw_parts(cast_ptr, len, len)
+        }
+    }
 
     pub fn len(&self) -> usize { self.data.len() }
     pub fn height(&self) -> u32 { self.header.height }
