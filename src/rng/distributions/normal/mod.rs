@@ -20,7 +20,7 @@ mod detail {
         } else {
             let r_2 = -two * samples[0].ln();
             let r = r_2.sqrt();
-            let theta = two * T::PI;
+            let theta = two * T::PI * samples[1].get();
 
             Some([(r * theta.cos()).into(), (r * theta.sin()).into()])
         }
