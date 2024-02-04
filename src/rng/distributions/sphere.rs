@@ -46,7 +46,7 @@ impl<T: FloatingPoint + GenerateCanonical<T>, const N: usize> NDSampler<T, N> fo
             1 /* 1/2 */  => T::from_scalar(0.5f64).unwrap(),
             2 /* 1/2π */ => <T as FloatConstants>::FRAC_1_PI * T::from_scalar(0.5f64).unwrap(),
             3 /* 1/4π */ => <T as FloatConstants>::FRAC_1_PI * T::from_scalar(0.25f64).unwrap(),
-            _ => todo!("why do you need more than 3 dimensions for anyway"),
+            _ => todo!("what do you need more than 3 dimensions for anyway"),
         };
 
         (sample, pdf)
