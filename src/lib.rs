@@ -1,4 +1,5 @@
 #![feature(adt_const_params)]
+#![feature(allocator_api)]
 #![feature(float_next_up_down)]
 #![feature(generic_const_exprs)]
 #![feature(inherent_associated_types)]
@@ -15,6 +16,7 @@ pub mod numeric_limits;
 pub mod qoi;
 pub mod rng;
 pub mod smallvec;
+pub mod stl;
 
 pub use integral::*;
 pub use numeric_limits::*;

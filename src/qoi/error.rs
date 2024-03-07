@@ -13,7 +13,18 @@ pub enum ErrorType {
 }
 
 impl Display for ErrorType {
-    fn fmt(&self, _f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+        let s = match self {
+            ErrorType::InsufficientData => "insufficient data",
+            ErrorType::BadMagic => "bad magic value",
+            ErrorType::BadMetadata => "bad metadata",
+            ErrorType::TooMuchData => "too much data",
+            ErrorType::BadEndMark => "bad end mark",
+            ErrorType::IOError => "I/O error",
+        };
+
+        f.write_str(s)
+    }
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
@@ -24,7 +35,9 @@ pub struct QoIError {
 }
 
 impl Display for QoIError {
-    fn fmt(&self, _f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> { todo!() }
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+        f.write_fmt(format_args!("QoI error of type \"{}\", additional info: {}", self.err_type, self.desc))
+    }
 }
 
 impl QoIError {
