@@ -1,6 +1,3 @@
-[workspace]
-members = ["examples/smallpt_rs", "examples/rng_visualiser"]
-
 [package]
 name = "stuff"
 version = "0.0.1"
