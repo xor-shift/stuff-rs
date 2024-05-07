@@ -1,6 +1,6 @@
 use crate::integral::convert::FromScalar;
 use crate::rng::{RandomNumberEngine, UniformRandomBitGenerator};
-use std::marker::{ConstParamTy, StructuralPartialEq, StructuralEq};
+use std::marker::{ConstParamTy, StructuralPartialEq};
 
 use super::*;
 
@@ -34,13 +34,12 @@ const SPLITMIX64_PARAMS: SplitMixParameters = SplitMixParameters {
     s2: 31_u32,
 };
 
-impl StructuralEq for SplitMixParameters {}
-
 impl StructuralPartialEq for SplitMixParameters {}
 
 impl Eq for SplitMixParameters {}
 
 impl PartialEq for SplitMixParameters {
+    #[rustfmt::skip]
     fn eq(&self, other: &Self) -> bool {
         true
             && self.gamma == other.gamma
@@ -61,33 +60,23 @@ pub struct SplitMixEngine<T: UnsignedIntegral, const PARAMS: SplitMixParameters>
 }
 
 impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> PartialEq<Self> for SplitMixEngine<T, PARAMS> {
-    fn eq(&self, other: &Self) -> bool {
-        self.state.eq(&other.state)
-    }
+    fn eq(&self, other: &Self) -> bool { self.state.eq(&other.state) }
 }
 
 impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> Eq for SplitMixEngine<T, PARAMS> {}
 
 impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> SplitMixEngine<T, PARAMS> {
-    pub fn new() -> Self {
-        Self { state: T::zero() }
-    }
+    pub fn new() -> Self { Self { state: T::zero() } }
 
-    pub fn split(self) -> (Self, Self) {
-        todo!()
-    }
+    pub fn split(self) -> (Self, Self) { todo!() }
 }
 
 impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> UniformRandomBitGenerator for SplitMixEngine<T, PARAMS> {
     type ResultType = T;
 
-    fn min() -> Self::ResultType {
-        NumericLimits::min()
-    }
+    fn min() -> Self::ResultType { NumericLimits::min() }
 
-    fn max() -> Self::ResultType {
-        NumericLimits::max()
-    }
+    fn max() -> Self::ResultType { NumericLimits::max() }
 
     fn generate(&mut self) -> Self::ResultType {
         self.state = self.state.wrapping_add(FromScalar::from_scalar(PARAMS.gamma).unwrap());
@@ -103,22 +92,16 @@ impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> UniformRandomBitGene
 }
 
 impl<T: UnsignedIntegral, const PARAMS: SplitMixParameters> RandomNumberEngine for SplitMixEngine<T, PARAMS> {
-    fn discard(&mut self, _z: usize) {
-        todo!()
-    }
+    fn discard(&mut self, _z: usize) { todo!() }
 
-    fn reset(&mut self) {
-        self.seed_from_result(T::zero());
-    }
+    fn reset(&mut self) { self.seed_from_result(T::zero()); }
 
-    fn seed_from<G: UniformRandomBitGenerator<ResultType=u32>>(&mut self, _generator: &mut G) {
+    fn seed_from<G: UniformRandomBitGenerator<ResultType = u32>>(&mut self, _generator: &mut G) {
         //self.state =  ((generator.generate() as u64) << 32) | (generator.generate() as u64);
         todo!()
     }
 
-    fn seed_from_result(&mut self, v: Self::ResultType) {
-        self.state = v;
-    }
+    fn seed_from_result(&mut self, v: Self::ResultType) { self.state = v; }
 }
 
 pub type SplitMix32 = SplitMixEngine<u32, SPLITMIX32_PARAMS>;

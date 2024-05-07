@@ -1,3 +1,5 @@
+#![allow(incomplete_features)]
+#![allow(mixed_script_confusables)]
 #![feature(adt_const_params)]
 #![feature(allocator_api)]
 #![feature(float_next_up_down)]
@@ -7,9 +9,7 @@
 #![feature(let_chains)]
 #![feature(more_float_constants)]
 #![feature(structural_match)]
-//
-#![allow(incomplete_features)]
-#![allow(mixed_script_confusables)]
+#![feature(stmt_expr_attributes)]
 
 pub mod integral;
 pub mod numeric_limits;
